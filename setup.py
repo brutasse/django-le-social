@@ -5,14 +5,14 @@ from setuptools import find_packages
 
 setup(
     name='django-le-social',
-    version='0.2',
+    version='0.1',
     author=u'Bruno Renie',
     author_email='bruno@renie.fr',
     packages=find_packages(),
     include_package_data=True,
     url='https://github.com/brutasse/django-le-social',
     license='BSD licence, see LICENCE file',
-    description='Social authentication for developers',
+    description='External registration / authentication for Django',
     long_description=open('README.rst').read(),
     install_requires=[
         'Django>=1.3',
