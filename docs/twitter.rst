@@ -11,7 +11,7 @@ initiate the twitter login and the other for the OAuth callback:
 
     from myapp import views
 
-    urlpatterns += patterns('',
+    urlpatterns = patterns('',
         url(r'^oauth/authorize/$', views.authorize, name='oauth_authorize'),
         url(r'^oauth/return/$', views.return_, name='oauth_return'),
     )
