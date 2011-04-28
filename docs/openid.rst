@@ -2,6 +2,7 @@ OpenID authentication
 =====================
 
 For OpenID support, you need ``le_social.openid`` in your ``INSTALLED_APPS``.
+Make sure you run ``manage.py syncdb``.
 
 If you want to access the list of OpenID URLs associated to the current
 session, add ``le_social.middleware.OpenIDMiddleware`` to your
