@@ -82,9 +82,9 @@ class Return(generic.View, OAuthMixin):
         except tweepy.TweepError as e:
             return self.error('Failed to get an access token')
 
-        return self.success(auth)
+        return self.success(auth, request, *args, **kwargs)
 
-    def success(self, auth):
+    def success(self, auth, request, *args, **kwargs):
         """
         Twitter authentication successful, do some stuff with his key.
         """
