@@ -76,6 +76,19 @@ doesn't want to allow logged-in users to sign in with Twitter:
             return super(Authorize, self).get(request, *args, **kwargs)
     authorize = Authorize.as_view()
 
+If you want Twitter to redirect your user to a custom url, specify it in
+``Authorize.build_callback``. This function needs to return a full URL,
+including protocol and domain. For instance:
+
+.. code-block:: python
+
+    class Authorize(views.Authorize):
+        def build_callback(self):
+            return 'http://example.com/custom-callback/'
+
+If you don't implement ``build_callback``, your users will be redirected to
+the URL specified on the app settings on twitter.com.
+
 Callback
 ````````
 
