@@ -97,7 +97,7 @@ class BadOpenIDStatus(Exception):
     pass
 
 
-class Return(generic.View, ReturnUrlMixin):
+class Callback(generic.View, ReturnUrlMixin):
     def success(self):
         """
         Gets called when the OpenID authentication is successful.

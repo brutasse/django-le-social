@@ -13,7 +13,7 @@ initiate the twitter login and the other for the OAuth callback:
 
     urlpatterns = patterns('',
         url(r'^oauth/authorize/$', views.authorize, name='oauth_authorize'),
-        url(r'^oauth/return/$', views.return_, name='oauth_return'),
+        url(r'^oauth/callback/$', views.callback, name='oauth_callback'),
     )
 
 Set your OAuth consumer key and secret in your settings:
@@ -37,7 +37,7 @@ And create the two views:
 
     authorize = views.Authorize.as_view()
 
-    class Return(views.Return):
+    class Callback(views.Callback):
         def error(self, message, exception=None):
             return HttpResponse(message)
 
@@ -51,9 +51,9 @@ And create the two views:
             user.secret = auth.access_token.secret
             user.save()
             return redirect(reverse('some_view'))
-    return_ = Return.as_view()
+    callback = Callback.as_view()
 
-On the ``Return`` view, you need to implement the
+On the ``Callback`` view, you need to implement the
 ``error(message, exception=None)`` and ``success(auth)`` methods.
 Both must return an HTTP response.
 
@@ -76,17 +76,17 @@ doesn't want to allow logged-in users to sign in with Twitter:
             return super(Authorize, self).get(request, *args, **kwargs)
     authorize = Authorize.as_view()
 
-Return
-``````
+Callback
+````````
 
-You can also special-case the ``Return`` view using the same technique, but
+You can also special-case the ``Callback`` view using the same technique, but
 you really need to implement the ``error()`` and ``success()`` methods on this
 class.
 
 OAuth credentials
 `````````````````
 
-By default, the ``Authorize`` and ``Return`` views look for the Twitter app
+By default, the ``Authorize`` and ``Callback`` views look for the Twitter app
 credentials in your settings (``CONSUMER_KEY``, ``CONSUMER_SECRET``). You can
 implement your own mixin instead. The default OAuth mixin looks for the
 consumer key and secrets in this order:
@@ -114,8 +114,8 @@ certain conditions:
         pass
     authorize = Authorize.as_view()
 
-    class Return(OAuthMixin, views.Return):
+    class Callback(OAuthMixin, views.Callback):
         def success(self, auth):
             do_some_stuff()
             return something
-    return_ = Return.as_view()
+    callback = Callback.as_view()

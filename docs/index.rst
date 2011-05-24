@@ -32,6 +32,16 @@ Usage
    twitter
    openid
 
+Changes
+-------
+
+* 0.2:
+
+  * renamed OpenID's and Twitter's ``Return`` views to ``Callback``
+  * added ``build_callback`` for custom twitter callback URLs
+
+* 0.1: initial version
+
 Indices and tables
 ==================
 

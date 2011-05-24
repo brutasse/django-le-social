@@ -46,13 +46,13 @@ class Authorize(generic.View, OAuthMixin):
         request.session['request_token'] = (auth.request_token.key,
                                             auth.request_token.secret)
         return redirect(url)
-    
+
     def build_callback(self):
         """ Override this if you'd like to specify a callback URL"""
         return None
 
 
-class Return(generic.View, OAuthMixin):
+class Callback(generic.View, OAuthMixin):
     """
     A base class for the return callback. Subclasses must define:
 
