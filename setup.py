@@ -2,10 +2,12 @@
 from distutils.core import setup
 from setuptools import find_packages
 
+import le_social
+
 
 setup(
     name='django-le-social',
-    version='0.1',
+    version=le_social.__version__,
     author=u'Bruno Renie',
     author_email='bruno@renie.fr',
     packages=find_packages(),
