@@ -37,7 +37,7 @@ class Authorize(generic.View, OAuthMixin):
     in the session and redirects to twitter.
     """
     def get(self, request, *args, **kwargs):
-        callback = self.build_callback(request, *args, **kwargs)
+        callback = self.build_callback()
         auth = tweepy.OAuthHandler(self.get_consumer_key(),
                                    self.get_consumer_secret(),
                                    secure=True,
@@ -47,7 +47,7 @@ class Authorize(generic.View, OAuthMixin):
                                             auth.request_token.secret)
         return redirect(url)
     
-    def build_callback(self, request, *args, **kwargs):
+    def build_callback(self):
         """ Override this if you'd like to specify a callback URL"""
         return None
 
@@ -82,9 +82,9 @@ class Return(generic.View, OAuthMixin):
         except tweepy.TweepError as e:
             return self.error('Failed to get an access token')
 
-        return self.success(auth, request, *args, **kwargs)
+        return self.success(auth)
 
-    def success(self, auth, request, *args, **kwargs):
+    def success(self, auth):
         """
         Twitter authentication successful, do some stuff with his key.
         """
