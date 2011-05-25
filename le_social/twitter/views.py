@@ -64,7 +64,7 @@ class Callback(generic.View, OAuthMixin):
           something goes wrong? Must return an HttpResponse
 
         - success(auth): what to do on successful auth? Do
-          some stuff with the tweepy.OAuth object and return
+          some stuff with the twitter.OAuth object and return
           an HttpResponse
     """
     def get(self, request, *args, **kwargs):

@@ -4,8 +4,11 @@ Twitter authentication
 Basic usage
 -----------
 
-Communications with Twitter are handled with tweepy. Define two URLs, one to
-initiate the twitter login and the other for the OAuth callback:
+Communications with Twitter are handled with Mike Verdone's `minimalist
+python twitter API library`_. Define two URLs, one to initiate the twitter
+login and the other for the OAuth callback:
+
+.. _`minimalist python twitter API library`: http://mike.verdone.ca/twitter
 
 .. code-block:: python
 
