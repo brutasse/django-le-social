@@ -35,6 +35,11 @@ Usage
 Changes
 -------
 
+* 0.3:
+
+  * switched from tweepy to twitter for Twitter authentication
+  * added the ability to force the login on the twitter authorization screen
+
 * 0.2:
 
   * renamed OpenID's and Twitter's ``Return`` views to ``Callback``
