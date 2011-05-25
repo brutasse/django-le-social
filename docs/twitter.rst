@@ -15,7 +15,10 @@ initiate the twitter login and the other for the OAuth callback:
         url(r'^oauth/authorize/$',
             views.authorize,
             name='oauth_authorize'),
-        url(r'^oauth/authorize/force$',
+        # use the following URL if you want to force authentication
+        # For example, if you're already authenticated, but want to
+        # reauthenticate as a different user.
+        url(r'^oauth/authorize/force/$',
             views.authorize,
             {'force_login': True},
             name='oauth_authorize'),
