@@ -13,5 +13,5 @@ store the OAuth token or the OpenID data and log the user in.
 * Authors: see AUTHORS
 * Licence: BSD
 * Compatibility: Django 1.3+ (class-based-views required)
-* Requirements: tweepy, python-openid
+* Requirements: twitter, python-openid
 * Documentation: http://django-le-social.readthedocs.org/en/latest/

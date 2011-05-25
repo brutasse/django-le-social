@@ -4,16 +4,30 @@ Twitter authentication
 Basic usage
 -----------
 
-Communications with Twitter are handled with tweepy. Define two URLs, one to
-initiate the twitter login and the other for the OAuth callback:
+Communications with Twitter are handled with Mike Verdone's `minimalist
+python twitter API library`_. Define two URLs, one to initiate the twitter
+login and the other for the OAuth callback:
+
+.. _`minimalist python twitter API library`: http://mike.verdone.ca/twitter
 
 .. code-block:: python
 
     from myapp import views
 
     urlpatterns = patterns('',
-        url(r'^oauth/authorize/$', views.authorize, name='oauth_authorize'),
-        url(r'^oauth/callback/$', views.callback, name='oauth_callback'),
+        url(r'^oauth/authorize/$',
+            views.authorize,
+            name='oauth_authorize'),
+        # use the following URL if you want to force authentication
+        # For example, if you're already authenticated, but want to
+        # reauthenticate as a different user.
+        url(r'^oauth/authorize/force/$',
+            views.authorize,
+            {'force_login': True},
+            name='oauth_authorize'),
+        url(r'^oauth/callback/$',
+            views.callback,
+            name='oauth_callback'),
     )
 
 Set your OAuth consumer key and secret in your settings:
@@ -31,7 +45,7 @@ And create the two views:
     from django.shortcuts import redirect
     from django.utils import simplejson as json
 
-    import tweepy
+    import twitter
 
     from le_social.twitter import views
 
@@ -42,13 +56,13 @@ And create the two views:
             return HttpResponse(message)
 
         def success(self, auth):
-            api = tweepy.API(auth, parser=RawParser())
-            response = api.me()
-            user, created = SomeModel.objects.get_or_create(
-                screen_name=json.loads(response)['screen_name']
+            api = twitter.Twitter(auth=auth)
+            user = api.account.verify_credentials()
+            dbuser, created = SomeModel.objects.get_or_create(
+                screen_name=user['screen_name']
             )
-            user.key = auth.access_token.key
-            user.secret = auth.access_token.secret
+            user.key = auth.token
+            user.secret = auth.secret
             user.save()
             return redirect(reverse('some_view'))
     callback = Callback.as_view()
@@ -56,6 +70,8 @@ And create the two views:
 On the ``Callback`` view, you need to implement the
 ``error(message, exception=None)`` and ``success(auth)`` methods.
 Both must return an HTTP response.
+
+
 
 Extension points
 ----------------
@@ -76,18 +92,39 @@ doesn't want to allow logged-in users to sign in with Twitter:
             return super(Authorize, self).get(request, *args, **kwargs)
     authorize = Authorize.as_view()
 
-If you want Twitter to redirect your user to a custom url, specify it in
-``Authorize.build_callback``. This function needs to return a full URL,
+If you want Twitter to redirect your user to a custom location, specify it in
+``Authorize.build_callback``. This function needs to return an absolute URI,
 including protocol and domain. For instance:
 
 .. code-block:: python
+    
+    from django.contrib.sites.models import Site
+
+    # We're replacing the following line:
+    # authorize = views.Authorize.as_view() 
 
     class Authorize(views.Authorize):
         def build_callback(self):
-            return 'http://example.com/custom-callback/'
+            # build a custom callback URI
+            next = self.request.path
+            site = Site.objects.get_current()
+            return 'http://{0}{1}?next={2}'.format(
+                site.domain,
+                reverse('oauth_callback'),
+                next)
 
-If you don't implement ``build_callback``, your users will be redirected to
-the URL specified on the app settings on twitter.com.
+If you don't implement ``build_callback`` or if you return ``None``, your users
+will be redirected to the default URL specified in the app's settings on
+twitter.com.
+
+Although you can specify a default, it is `good practice`_ to always pass a
+callback URI when authorizing; this is the preferred way to preserve
+application state when the user's browser returns from authenticating.
+
+Don't forget to update your urlconf after defining a custom callback URL.
+Returning browsers should be routed to the Callback view.
+
+.. _`good practice`: http://dev.twitter.com/pages/auth#register
 
 Callback
 ````````

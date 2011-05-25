@@ -18,7 +18,7 @@ setup(
     long_description=open('README.rst').read(),
     install_requires=[
         'Django>=1.3',
-        'tweepy>=1.5',
+        'twitter>=1.6.1',
         'python-openid>=2.2.5',
     ],
     classifiers=[

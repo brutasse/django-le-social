@@ -3,7 +3,8 @@ from django.core.exceptions import ImproperlyConfigured
 from django.shortcuts import redirect
 from django.views import generic
 
-import tweepy
+from twitter import Twitter, OAuth, TwitterError
+from twitter.oauth_dance import parse_oauth_tokens
 
 
 class OAuthMixin(object):
@@ -36,15 +37,18 @@ class Authorize(generic.View, OAuthMixin):
     A base class for the authorize view. Just sets the request token
     in the session and redirects to twitter.
     """
-    def get(self, request, *args, **kwargs):
+    def get(self, request, force_login=False, *args, **kwargs):
         callback = self.build_callback()
-        auth = tweepy.OAuthHandler(self.get_consumer_key(),
-                                   self.get_consumer_secret(),
-                                   secure=True,
-                                   callback=callback)
-        url = auth.get_authorization_url(signin_with_twitter=True)
-        request.session['request_token'] = (auth.request_token.key,
-                                            auth.request_token.secret)
+        oauth = OAuth('', '',
+                      self.get_consumer_key(),
+                      self.get_consumer_secret())
+        api = Twitter(auth=oauth, secure=True, format='', api_version=None)
+        (oauth.token, oauth.token_secret) = parse_oauth_tokens(
+            api.oauth.request_token(oauth_callback=callback))
+        request.session['request_token'] = (oauth.token, oauth.token_secret)
+        url = 'https://api.twitter.com/oauth/authenticate?oauth_token=%s' % oauth.token
+        if force_login:
+            url += '&force_login=true'
         return redirect(url)
 
     def build_callback(self):
@@ -60,7 +64,7 @@ class Callback(generic.View, OAuthMixin):
           something goes wrong? Must return an HttpResponse
 
         - success(auth): what to do on successful auth? Do
-          some stuff with the tweepy.OAuth object and return
+          some stuff with the twitter.OAuth object and return
           an HttpResponse
     """
     def get(self, request, *args, **kwargs):
@@ -74,15 +78,17 @@ class Callback(generic.View, OAuthMixin):
         request_token = request.session.pop('request_token')
         request.session.modified = True
 
-        auth = tweepy.OAuthHandler(self.get_consumer_key(),
-                                   self.get_consumer_secret(), secure=True)
-        auth.set_request_token(request_token[0], request_token[1])
+        oauth = OAuth(request_token[0], request_token[1],
+                      self.get_consumer_key(),
+                      self.get_consumer_secret())
+        api = Twitter(auth=oauth, secure=True, format='', api_version=None)
         try:
-            auth.get_access_token(verifier=verifier)
-        except tweepy.TweepError as e:
+            (oauth.token, oauth.token_secret) = parse_oauth_tokens(
+                api.oauth.access_token(oauth_verifier=verifier))
+        except TwitterError as e:
             return self.error('Failed to get an access token')
 
-        return self.success(auth)
+        return self.success(oauth)
 
     def success(self, auth):
         """
