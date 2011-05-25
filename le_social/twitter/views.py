@@ -50,13 +50,13 @@ class Authorize(generic.View, OAuthMixin):
         if force_login:
             url += '&force_login=true'
         return redirect(url)
-    
+
     def build_callback(self):
         """ Override this if you'd like to specify a callback URL"""
         return None
 
 
-class Return(generic.View, OAuthMixin):
+class Callback(generic.View, OAuthMixin):
     """
     A base class for the return callback. Subclasses must define:
 

@@ -10,7 +10,7 @@ django-le-social executes a method that you decide. There is no user creation,
 no new model instance, no user login. You need to decide what to do, mainly
 store the OAuth token or the OpenID data and log the user in.
 
-* Author: Bruno Renié
+* Authors: see AUTHORS
 * Licence: BSD
 * Compatibility: Django 1.3+ (class-based-views required)
 * Requirements: tweepy, python-openid

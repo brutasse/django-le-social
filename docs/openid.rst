@@ -21,7 +21,7 @@ Define the two URLs to initiate the OpenID connection and the return URL:
 
     urlpatterns = patterns('',
         url(r'^openid/$', views.begin, name='openid_begin'),
-        url(r'^openid/complete/$', views.return_, name='openid_complete'),
+        url(r'^openid/complete/$', views.callback, name='openid_complete'),
     )
 
 And define your two view using the base classes provided by django-le-social:
@@ -40,7 +40,7 @@ And define your two view using the base classes provided by django-le-social:
             return HttpResponse(message)
     begin = Begin.as_view()
 
-    class Return(views.Return):
+    class Callback(views.Callback):
         return_url = '/openid/complete/'
 
         def success(self):
@@ -50,7 +50,7 @@ And define your two view using the base classes provided by django-le-social:
 
         def failure(self, message):
             return HttpResponse(message)
-    return_ = Return.as_view()
+    callback = Callback.as_view()
 
 You also need a basic template to render the OpenID form:
 
@@ -76,7 +76,7 @@ Extension points
 Return URL
 ``````````
 
-Both the ``Begin`` and ``Return`` views need a ``return_url`` attribute. In
+Both the ``Begin`` and ``Callback`` views need a ``return_url`` attribute. In
 the examples above the URL is hardcoded but you can provide a
 dynamically-generated one by defining ``get_return_url()`` on the view class
 or on a mixin shared by your subclasses:
@@ -95,10 +95,10 @@ or on a mixin shared by your subclasses:
         pass
     begin = Begin.as_view()
 
-    class Return(ReturnUrlMixin, views.Return):
+    class Callback(ReturnUrlMixin, views.Callback):
         def success(self):
             return something
-    return_ = Return.as_view()
+    callback = Callback.as_view()
 
 Form class
 ``````````
