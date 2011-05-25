@@ -46,7 +46,7 @@ class Authorize(generic.View, OAuthMixin):
         (oauth.token, oauth.token_secret) = parse_oauth_tokens(
             api.oauth.request_token(oauth_callback=callback))
         request.session['request_token'] = (oauth.token, oauth.token_secret)
-        url = 'http://api.twitter.com/oauth/authenticate?oauth_token=%s' % oauth.token
+        url = 'https://api.twitter.com/oauth/authenticate?oauth_token=%s' % oauth.token
         if force_login:
             url += '&force_login=true'
         return redirect(url)
