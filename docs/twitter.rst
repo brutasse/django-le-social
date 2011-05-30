@@ -61,8 +61,8 @@ And create the two views:
             dbuser, created = SomeModel.objects.get_or_create(
                 screen_name=user['screen_name']
             )
-            user.key = auth.token
-            user.secret = auth.secret
+            user.token = auth.token
+            user.token_secret = auth.token_secret
             user.save()
             return redirect(reverse('some_view'))
     callback = Callback.as_view()
