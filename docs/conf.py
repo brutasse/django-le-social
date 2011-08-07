@@ -214,3 +214,8 @@ man_pages = [
     ('index', 'django-le-social', u'Django-le-social Documentation',
      [u'Bruno Renié'], 1)
 ]
+
+DIRECTORIES = (
+    ('', 'make html'),
+)
+IGNORE_DIRECTORIES = ['_build']
