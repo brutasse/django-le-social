@@ -1,0 +1,5 @@
+{% load url from future %}
+<form method="post" action="{% url "openid_begin" %}">{% csrf_token %}
+	{{ form.as_p }}
+	<input type="submit" value="Log in" >
+</form>

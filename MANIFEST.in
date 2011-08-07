@@ -1,1 +1,2 @@
 include README.rst LICENCE
+recursive-include le_social/tests/templates *

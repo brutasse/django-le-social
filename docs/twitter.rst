@@ -24,7 +24,7 @@ login and the other for the OAuth callback:
         url(r'^oauth/authorize/force/$',
             views.authorize,
             {'force_login': True},
-            name='oauth_authorize'),
+            name='oauth_force_authorize'),
         url(r'^oauth/callback/$',
             views.callback,
             name='oauth_callback'),
