@@ -17,7 +17,7 @@ setup(
     description='External registration / authentication for Django',
     long_description=open('README.rst').read(),
     install_requires=[
-        'Django>=1.3',
+        'Django',
         'twitter>=1.6.1',
         'python-openid>=2.2.5',
     ],

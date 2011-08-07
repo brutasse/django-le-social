@@ -11,7 +11,7 @@ from openid.store.interface import OpenIDStore
 from django.conf import settings
 from django.db.models import Q
 
-from le_social.openid.models import Association, Nonce
+from .models import Association, Nonce
 
 
 class DjangoOpenIDStore(OpenIDStore):

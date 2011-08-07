@@ -1,7 +1,8 @@
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.shortcuts import redirect
-from django.views import generic
+
+from ..utils import generic
 
 from twitter import Twitter, OAuth, TwitterError
 from twitter.oauth_dance import parse_oauth_tokens
@@ -46,7 +47,8 @@ class Authorize(generic.View, OAuthMixin):
         (oauth.token, oauth.token_secret) = parse_oauth_tokens(
             api.oauth.request_token(oauth_callback=callback))
         request.session['request_token'] = (oauth.token, oauth.token_secret)
-        url = 'https://api.twitter.com/oauth/authenticate?oauth_token=%s' % oauth.token
+        url = ('https://api.twitter.com/oauth/authenticate?oauth_token='
+               '%s' % oauth.token)
         if force_login:
             url += '&force_login=true'
         return redirect(url)
@@ -85,7 +87,7 @@ class Callback(generic.View, OAuthMixin):
         try:
             (oauth.token, oauth.token_secret) = parse_oauth_tokens(
                 api.oauth.access_token(oauth_verifier=verifier))
-        except TwitterError as e:
+        except TwitterError:
             return self.error('Failed to get an access token')
 
         return self.success(oauth)

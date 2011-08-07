@@ -6,13 +6,13 @@ from openid.extensions import sreg, ax
 from django.shortcuts import redirect
 from django.utils.encoding import smart_unicode
 from django.utils.translation import ugettext_lazy as _
-from django.views import generic
 
-from le_social.openid.forms import OpenIDForm
-from le_social.openid.middleware import OpenIDMiddleware
-from le_social.openid.store import DjangoOpenIDStore
-from le_social.openid.utils import (get_url_host, discover_extensions,
-                                    from_openid_response)
+from ..utils import generic
+
+from .forms import OpenIDForm
+from .middleware import OpenIDMiddleware
+from .store import DjangoOpenIDStore
+from .utils import get_url_host, discover_extensions, from_openid_response
 
 
 class ReturnUrlMixin(object):
