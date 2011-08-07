@@ -8,7 +8,7 @@ import le_social
 setup(
     name='django-le-social',
     version=le_social.__version__,
-    author=u'Bruno Renie',
+    author='Bruno Renié',
     author_email='bruno@renie.fr',
     packages=find_packages(),
     include_package_data=True,
