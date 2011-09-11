@@ -18,3 +18,18 @@ him in.
 * Compatibility: Django 1.3 or Django < 1.3 + django-cbv
 * Requirements: twitter, python-openid
 * Documentation: http://django-le-social.readthedocs.org/en/latest/
+
+Hacking
+-------
+
+Setup your environment::
+
+    git clone https://brutasse@github.com/brutasse/django-le-social.git
+    cd django-le-social
+    mkvirtualenv --python python2 le-social
+    add2virtualenv .
+    pip install -r requirements.txt
+
+Hack, and run the tests::
+
+    ./le_social/tests/runner.py
