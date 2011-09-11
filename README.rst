@@ -33,3 +33,9 @@ Setup your environment::
 Hack, and run the tests::
 
     ./le_social/tests/runner.py
+
+Or do it with `Tox`_ to test on python2.6 and 2.7::
+
+    tox
+
+.. _Tox: http://codespeak.net/~hpk/tox
