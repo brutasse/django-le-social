@@ -10,10 +10,11 @@ class RegistrationProfile(models.Model):
 
     Example usage, to tie it to an actual auth.User object:
 
-    >>> from le_social.registration import models
+    >>> from le_social.registration import models as registration_models
     >>> from django.contrib.auth.models import User
+    >>> from django.db import models
 
-    >>> class RegistrationProfile(models.RegistrationProfile):
+    >>> class RegistrationProfile(registration_models.RegistrationProfile):
     ...     user = models.ForeignKey(User)
     """
     ACTIVATED = "ALREADY_ACTIVATED"
