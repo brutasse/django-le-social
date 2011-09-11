@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import patterns, url
 
-from . import openid_views as views
+from . import views
 
 
 urlpatterns = patterns('',

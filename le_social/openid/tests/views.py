@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 
-from ..openid import views
+from .. import views
 
 
 class Common(object):
