@@ -1,6 +1,6 @@
 from django.contrib.sites.models import RequestSite
 
-from ..registration import views
+from .. import views
 from .models import (RegistrationProfile, NotifyRegistrationProfile,
                      ExpiringRegistrationProfile)
 
