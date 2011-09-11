@@ -1,3 +1,4 @@
 Django
 twitter
 python-openid
+coverage

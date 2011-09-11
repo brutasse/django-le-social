@@ -41,15 +41,12 @@ def setup_test_environment():
                 'NAME': 'le_social.sqlite',
             },
         },
-        "SITE_ID": 1,
         "ROOT_URLCONF": "",
-        "STATIC_URL": "/static/",
         "MIDDLEWARE_CLASSES": [
             "django.middleware.common.CommonMiddleware",
             "django.contrib.sessions.middleware.SessionMiddleware",
             'django.middleware.csrf.CsrfViewMiddleware',
             "django.contrib.auth.middleware.AuthenticationMiddleware",
-            "django.contrib.messages.middleware.MessageMiddleware",
         ],
         "INSTALLED_APPS": APPS,
         "TEMPLATE_DIRS": [
