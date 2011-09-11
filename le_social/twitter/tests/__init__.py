@@ -31,7 +31,7 @@ class Twitter(object):
 
 
 class TwitterTest(TestCase):
-    urls = 'le_social.tests.twitter_urls'
+    urls = 'le_social.twitter.tests.urls'
 
     def setUp(self):
         self._old_twitter = twitter.Twitter

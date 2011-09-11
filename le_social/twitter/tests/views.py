@@ -2,7 +2,7 @@ import twitter
 
 from django.http import HttpResponse
 
-from ..twitter import views
+from .. import views
 
 kwargs = {'consumer_key': 'key',
           'consumer_secret': 'secret'}

@@ -18,7 +18,7 @@ APPS = (
     'le_social.twitter',
     'le_social.openid',
     'le_social.registration',
-    'le_social.tests',
+    'le_social.tests',  # For test templates
 )
 
 
