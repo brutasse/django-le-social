@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 import twitter
 from twitter import oauth_dance
 

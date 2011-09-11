@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 import optparse
+import os
 import sys
 
 from django.conf import settings
@@ -8,6 +9,8 @@ try:
     from django.utils.functional import empty
 except ImportError:
     empty = None
+
+from le_social import openid, registration
 
 
 APPS = (
@@ -18,8 +21,12 @@ APPS = (
     'le_social.twitter',
     'le_social.openid',
     'le_social.registration',
-    'le_social.tests',  # For test templates
+    'le_social.registration.tests',
 )
+
+
+def test_templates(module):
+    return os.path.join(os.path.dirname(module.__file__), 'test_templates')
 
 
 def setup_test_environment():
@@ -45,7 +52,10 @@ def setup_test_environment():
             "django.contrib.messages.middleware.MessageMiddleware",
         ],
         "INSTALLED_APPS": APPS,
-        "TEMPLATE_DIRS": [],
+        "TEMPLATE_DIRS": [
+            test_templates(openid),
+            test_templates(registration),
+        ],
     })
 
 
