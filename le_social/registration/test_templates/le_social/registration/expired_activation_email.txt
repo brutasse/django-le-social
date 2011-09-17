@@ -1,0 +1,5 @@
+Now you can activate. Here you'd have a link or something.
+
+For instance:
+
+http://{{ site.domain }}{% url registration_activate_expired activation_key %}

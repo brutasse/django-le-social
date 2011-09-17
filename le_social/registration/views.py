@@ -1,5 +1,11 @@
-from django.core.exceptions import ImproperlyConfigured
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.contrib.sites.models import RequestSite
+from django.core.mail import send_mail
 from django.shortcuts import redirect
+from django.template.loader import render_to_string
+
+from itsdangerous import URLSafeTimedSerializer, BadSignature
 
 from ..utils import generic, reverse_lazy
 
@@ -11,43 +17,39 @@ class ActivationComplete(generic.TemplateView):
 
 
 class Activate(generic.TemplateView):
-    model_class = None
     template_name = 'le_social/registration/activate.html'
     success_url = reverse_lazy('registration_activation_complete')
+    expires_in = 60 * 60 * 24 * 30  # 30 days
 
     def dispatch(self, request, *args, **kwargs):
-        self.activation_key = kwargs['activation_key']
-        if self.model_class is None:
-            raise ImproperlyConfigured(
-                "Provide a model class attribute that extends "
-                "le_social.registration.models.RegistrationProfile"
-            )
+        signer = URLSafeTimedSerializer(settings.SECRET_KEY)
         try:
-            self.profile = self.model_class.objects.get(
-                activation_key=self.activation_key,
-            )
-        except self.model_class.DoesNotExist:
+            self.activation_key = signer.loads(kwargs['activation_key'],
+                                               max_age=self.get_expires_in())
+        except BadSignature:
             return super(Activate, self).dispatch(request, *args, **kwargs)
-        if self.profile.activation_key_expired():
-            return super(Activate, self).dispatch(request, *args, **kwargs)
-
         self.activate()
         return redirect(self.get_success_url())
+
+    def get_expires_in(self):
+        return self.expires_in
 
     def get_success_url(self):
         return self.success_url
 
     def activate(self):
-        raise NotImplementedError("Provide an implementation of activate()")
+        User.objects.filter(pk=self.activation_key).update(is_active=True)
 
 
 class Register(generic.FormView):
     closed_url = reverse_lazy('registration_closed')
     form_class = RegistrationForm
-    model_class = None
     registration_closed = False
     success_url = reverse_lazy('registration_complete')
     template_name = 'le_social/registration/register.html'
+    notification_template_name = 'le_social/registration/activation_email.txt'
+    notification_subject_template_name = ('le_social/registration/'
+                                          'activation_email_subject.txt')
 
     def dispatch(self, request, *args, **kwargs):
         if self.get_registration_closed():
@@ -60,27 +62,28 @@ class Register(generic.FormView):
     def get_closed_url(self):
         return self.closed_url
 
-    def get_model_class(self):
-        return self.model_class
-
-    def get_notification_kwargs(self):
-        """
-        The **kwargs to send to the profile's send_notification() method.
-        Useful to pass a site or a request object for instance.
-        """
-        return {}
-
     def form_valid(self, form):
-        self.profile = form.save()
-        self.profile.send_notification(**self.get_notification_kwargs())
+        self.user = form.save()
+        signer = URLSafeTimedSerializer(settings.SECRET_KEY)
+        self.activation_key = signer.dumps(self.user.pk)
+        self.send_notification()
         return super(Register, self).form_valid(form)
 
-    def get_form_kwargs(self):
-        kwargs = super(Register, self).get_form_kwargs()
-        kwargs.update({
-            'model_class': self.get_model_class()
-        })
-        return kwargs
+    def get_notification_context(self):
+        return {
+            'user': self.user,
+            'activation_key': self.activation_key,
+            'site': RequestSite(self.request),
+        }
+
+    def send_notification(self):
+        context = self.get_notification_context()
+        send_mail(
+            render_to_string(self.notification_subject_template_name, context),
+            render_to_string(self.notification_template_name, context),
+            settings.DEFAULT_FROM_EMAIL,
+            [self.user.email],
+        )
 
 
 class RegistrationComplete(generic.TemplateView):

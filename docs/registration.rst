@@ -17,13 +17,10 @@ Here's the workflow:
 
 You need to add to your project:
 
-* A model to store the registration profiles, with a ForeignKey to your User
-  model (usually the User model from ``django.contrib.auth`` but it can be
-  anything else).
-
-* An implementation of the registration and activation logic.
-
 * The URLs.
+
+* If you need something different than the default scenario, an
+  implementation of the registration and activation logic.
 
 Everything you need is under the ``le_social.registration`` namespace.
 
@@ -45,38 +42,7 @@ First, create an app. Let's call it ``registration``:
 
     python manage.py startapp registration
 
-Create a model in ``registration/models.py``, extending
-``RegistrationProfile`` (which is an abstract model). We need to link it to
-our user object, in this case Django's own ``User`` model. The class also
-needs to implement a ``send_notification()`` method, which is used to send an
-activation link to our user.
-
-.. code-block:: python
-
-    from django.contrib.auth.models import User
-    from django.core.mail import send_mail
-    from django.db import models
-    from django.template import loader
-
-    from le_social.registration import models as registration_models
-
-    class RegistrationProfile(registration_models.RegistrationProfile):
-        user = models.ForeignKey(User)
-
-        def send_notification(self, **kwargs):
-            context = {'profile': self,
-                       'user': self.user,
-                       'site': kwargs.pop('site')},
-            send_mail('Account activation', loader.render_to_string(
-                'le_social/registration/activation_email.txt', context,
-            ), 'no-reply@example.com', [self.user.email])
-
-``send_notification()`` can be used to send email or anything else. Since your
-view code will call this method, you can make it accept any arguments, such as
-a ``Site`` object in this case (useful for the activation link in the email
-body).
-
-Next, add some URLs:
+Add some URLs in ``registration/urls.py``:
 
 .. code-block:: python
 
@@ -103,198 +69,206 @@ Next, add some URLs:
 
 
 Finally, add the ``registration.views`` you referenced in ``urls.py``. In this
-example, we'll be creating an inactive Django user on registration, send him
-a verification email and activate his account when he clicks on the activation
-link
+example, we'll be using the default behaviour that creates an inactive Django
+user on registration, sends him a verification email and activates his account
+when he clicks on the activation link.
 
 .. code-block:: python
 
-    from django.contrib.sites.models import RequestSite
-
     from le_social.registration import views
 
-    from registration.models import RegistrationProfile
-
-    activation_complete = views.ActivationComplete.as_view()
+    register = views.Register.as_view()
     registration_complete = views.RegistrationComplete.as_view()
     registration_closed = views.RegistrationClosed.as_view()
 
-    class Register(views.Register):
-        model_class = RegistrationProfile
-
-        def get_notification_kwargs(self):
-            return {'site': RequestSite(self.request)}
-    register = Register.as_view()
-
-    class Activate(views.Activate):
-        model_class = RegistrationProfile
-
-        def activate(self):
-            self.profile.user.is_active = True
-            self.profile.user.save()
-            self.profile.activation_key = self.profile.ACTIVATED
-            self.profile.save()
-    activate = Activate.as_view()
+    activate = views.Activate.as_view()
+    activation_complete = views.ActivationComplete.as_view()
 
 Extension points
 ----------------
 
-The registration profile
-````````````````````````
+Registration form
+`````````````````
 
-The registration profile, located at
-``le_social.registration.models.RegistrationProfile``, implements the minimal
-features required for registration:
+``le_social.registration.views.Register`` is a `FormView`_. The default
+registration form asks for:
 
-* an ``activation_key`` field, for storing the activation key
+* A username
 
-* an ``activation_key_expired()`` method, to determine whether the activation
-  key has expired or not. Keys never expire by default, you can customize the
-  behaviour in a custom class. For instance, if you want keys to expire after
-  30 days:
+* An email address
 
-  .. code-block:: python
+* Two passords
 
-      class ExpiringRegistrationProfile(RegistrationProfile):
-          user = models.ForeignKey(User)
+The default form only checks that the email is correct and the two passwords
+match. If you want to perform extra validation, such as checking that the
+username and the email are unique, just subclass the form and add your
+validaton logic:
 
-          def activation_key_expired(self):
-              delay = datetime.timedelta(days=30)
-              now = datetime.datetime.now()
-              return self.user.date_joined + delay < now
+.. _FormView: https://docs.djangoproject.com/en/dev/ref/class-based-views/#django.views.generic.edit.FormView
 
-* a ``send_notification()`` method to send the activation link to the user.
-  You can pass it any ``kwargs`` you want from your view code, which is useful
-  for getting a ``site`` or ``request`` object.
+.. code-block:: python
 
-  To generate the activation link, pass a ``site`` object and the activation
-  key to a template:
+    from django import forms
+    from le_social.registration import RegistrationForm
+
+    class MyRegistrationForm(RegistrationForm):
+        def clean_username(self):
+            if User.objects.filter(
+                username=self.cleaned_data['username'],
+            ).exists():
+                raise forms.ValidationError('This username is already being used')
+            return self.cleaned_data['username']
+
+Then declare your custom form in the ``Register`` view. Instead of doing:
+
+.. code-block:: python
+
+    register = views.Register.as_view()
+
+Do:
+
+.. code-block:: python
+
+    from .forms import MyRegistrationForm
+
+    register = views.Register.as_view(
+        form_class=MyRegistrationForm,
+    )
+
+Or even:
+
+.. code-block:: python
+
+    from .forms import MyRegistrationForm
+
+    class Register(views.Register):
+        form_class = MyRegistrationForm
+    register = Register.as_view()
+
+You can also completely rewrite the registration form to ask for different
+fields. However, there are a couple of requirements for this form:
+
+* It **must** implement a ``save()`` method. The default form's ``save()``
+  implementation inserts a new ``User`` object from ``django.contrib.auth``.
+  If you need a custom user model, define ``save()`` on your form to create a
+  different object.
+
+* The ``save()`` method **must** return a ``User`` object, or any model
+  instance that has a primary key. This object is added to the template
+  context for the registration notification (see below) and the primary key is
+  used to generate the activation link.
+
+Registration notification
+`````````````````````````
+
+The ``Register`` view has a ``send_notification()`` method that sends an
+activation email by default. The following templates are used:
+
+* ``le_social/registration/activation_email.txt`` for the email body,
+
+* ``le_social/registration/activation_email_subject`` for the email subject.
+
+The following context variables are available:
+
+* ``user``: the ``User`` instance returned by your form's ``save()`` method.
+
+* ``site``: a ``RequestSite`` object from the current request.
+
+* ``activation_key``: the signed key to put in your activation link. You can
+  build the activation link like this:
 
   .. code-block:: jinja
 
-      {% load url from future %}
-      http://{{ site.domain }}{% url "registration_activate" activation_key %}
+      http://{{ site.domain }}{% url registration_activate activation_key %}
 
-Registering your registration profile is done by attaching it to your
-``Register`` and ``Activate`` views:
-
-.. code-block:: python
-
-    from le_social.registration import views
-
-    class Register(views.Register):
-        model_class = CustomRegistrationProfile
-
-    class Activate(views.Activate):
-        model_class = CustomRegistrationProfile
-
-You can also have a common mixin for the two views. If you want to use
-different profiles according to a certain logic, use ``get_model_class()``:
-
-.. code-block:: python
-
-    class RegistrationMixin(object):
-        def get_model_class(self):
-            if some_condition():
-                return EmailRegistrationProfile
-            return SMSRegistrationProfile
-
-The registration form
-`````````````````````
-
-The default registration form asks for a username, an email address and a
-password. It doesn't check for username or email uniqueness, so you probably
-want to implement that depending on your requirements.
-
-A registration form needs to implement two methods:
-
-* ``save()``: this method creates an inactive user and a registration profile.
-  If you write a custom form, have a look at
-  ``le_social.registration.forms.RegistrationForm.save()``.
-
-* ``get_derived_field()``: this method should return a string, unique for the
-  user you're registering: a username, an email address… This string, after
-  being salted and hashed, is what generates the activation link. For
-  instance, for the default registration form:
-
-  .. code-block:: python
-
-      def get_derived_field(self):
-          return self.cleaned_data['username']
-
-Register your custom registration form using ``form_class`` or
-``get_form_class()``:
+If you need more context variables, override ``get_notification_context()`` on
+the ``Register`` view. For instance, to add a ``scheme`` variable containing
+either ``http`` or ``https``:
 
 .. code-block:: python
 
     class Register(views.Register):
-        form_class = CustomRegistrationForm
+        def get_notification_context(self):
+            context = super(Register, self).get_notification_context()
+            context.update({
+                'scheme': 'https' if self.request.is_secure() else 'http'
+            })
+            return context
 
-    # Or…
+Other registration parameters
+`````````````````````````````
 
-    class Register(views.Register):
-        def get_form_class(self):
-            if special_condition:
-                return CustomRegistrationForm
-            return RegistrationForm
-
-The form class's ``__init__()`` method also needs to accept a ``model_class``
-keyword argument.
-
-The registration views
-``````````````````````
-
-Register
-~~~~~~~~
-
-``Register`` is a ``FormView``. A ``model_class`` is the only required
-attribute (or its ``get_model_class()`` method counterpart). For further
-customization, you can set:
-
-* ``form_class``: as seen above, the form to use for registration.
-
-* ``get_form_class()``: a method that returns the form class to use.
-
-* ``registration_closed``: a boolean that determines whether the registration
-  is closed or not.
-
-* ``get_registration_closed()``: a method returning a boolean, the current
-  status of registration
+The following attributes of the ``Register`` class can be customized:
 
 * ``closed_url``: the URL to redirect to if the registration is closed.
+  Defaults to ``reverse('registration_closed')``.
 
-* ``get_closed_url()``: a method returning the redirect URL when registration
-  is closed.
+* ``form_class``: the form to use for registration. Defaults to
+  ``le_social.registation.forms.RegistrationForm``.
 
-* ``success_url``: the URL to redirect to on successful registration.
+* ``registration_closed``: boolean to open or close the registration. Defaults
+  to ``False``.
 
-* ``get_success_url()``: a method returning the redirect URL on successful
-  registration.
+* ``success_url``: the URL to redirect to on successful registration. Defaults
+  to ``reverse('registration_complete')``.
 
-* ``get_notification_kwargs()``: a method that returns the keyword arguments
-  to be passed to the registration profile's ``send_notification()`` method.
+* ``template_name``: the template to use to render the registration form.
+  Defaults to ``'le_social/registration/register.html'``.
 
-On top of that, all the standard attributes / methods for a ``FormView``
-are applicable.
+* ``notification_template_name``: the template to use for the notification
+  email. Defaults to ``'le_social/registration/activation_email.txt'``.
 
-Its default template (not provided) is set to
-``le_social/registration/register.html``.
+* ``notification_subject_template_name``: the template to use for the
+  notification subject. Defaults to
+  ``'le_social/registration/activation_email_subject.txt'``.
 
-Activate
-~~~~~~~~
+The following methods can be customized:
 
-``Activate`` is a ``TemplateView`` that redirects if the activation key is
-matched. Its template should then display an error message telling the user
-his request wasn't matched.
+* ``get_registration_closed()``: returns the value of ``registration_closed``.
 
-You need to implement ``activate()`` on this class. Other than that, you can
-customize the redirection URL using ``success_url`` or ``get_success_url()``.
+* ``get_closed_url()``: returns the value of ``closed_url``.
 
-Its default template (not provided) is set to
-``le_social/registration/activate.html``.
+* ``get_notification_context()``: builds the template context for the
+  activation email.
 
-Other views
-~~~~~~~~~~~
+* ``send_notification()``: sends the activation notification. This is an email
+  by default, but you can override this method to do anything else instead.
+
+Activation view
+```````````````
+
+The ``Activate`` view is a simple ``TemplateView`` that loads the activation
+key into an ``activation_key`` attribute.
+
+The key is signed using your ``SECRET_KEY`` setting. If the key is properly
+loaded, the activation view calls the ``activate()`` method and redirects to a
+``get_success_url()``.
+
+If the key is not valid, the template is rendered. Hence the template should
+show a "unable to activate" message, or something similar.
+
+The following attributes can be set on the ``Activate`` view:
+
+* ``template_name``: the template to use in case of failed activation.
+  Defaults to ``'le_social/registration/activate.html'``.
+
+* ``success_url``: the URL to redirect to in case of successful activation.
+  Defaults to ``reverse('registration_activation_complete')``.
+
+* ``expires_in``: the delay (in seconds) after which an activation link should
+  be considered as expired. Defaults to ``2592000`` (30 days), set it to
+  ``None`` if you want them to never expire.
+
+The following methods can be overriden:
+
+* ``get_expires_in()``: returns the content of ``expires_in`` by default.
+
+* ``get_success_url()``: returns the content of ``success_url``.
+
+* ``activate()``: sets the user's ``is_active`` attribute to ``True``. Override it if you have a custom user model.
+
+Other registration views
+------------------------
 
 The other views are plain ``TemplateViews``, their templates are not provided
 either. Here are the default paths, which you can alter using

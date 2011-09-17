@@ -2,8 +2,6 @@ from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
-from ..utils import make_activation_key
-
 
 class RegistrationForm(forms.Form):
     username = forms.RegexField(
@@ -16,10 +14,6 @@ class RegistrationForm(forms.Form):
                                 widget=forms.PasswordInput)
     password2 = forms.CharField(label=_('Password (again)'),
                                 widget=forms.PasswordInput)
-
-    def __init__(self, *args, **kwargs):
-        self.model_class = kwargs.pop('model_class')
-        super(RegistrationForm, self).__init__(*args, **kwargs)
 
     def clean(self):
         data = self.cleaned_data
@@ -38,12 +32,4 @@ class RegistrationForm(forms.Form):
         )
         user.is_active = False
         user.save()
-
-        profile = self.model_class.objects.create(
-            user=user,
-            activation_key=make_activation_key(self.get_derived_field()),
-        )
-        return profile
-
-    def get_derived_field(self):
-        return self.cleaned_data['username']
+        return user

@@ -1,5 +1,4 @@
-{% load url from future %}
-<form method="post" action="{% url "registration_register" %}">{% csrf_token %}
+<form method="post" action="{% url registration_register %}">{% csrf_token %}
 	{{ form.non_field_errors }}
 	{{ form.errors }}
 	{{ form.as_p }}
