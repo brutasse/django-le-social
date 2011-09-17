@@ -32,7 +32,7 @@ Setup your environment::
 
 Hack, and run the tests::
 
-    ./le_social/tests/runner.py
+    python setup.py test
 
 Or do it with `Tox`_ to test on python2.6 and 2.7::
 

@@ -31,5 +31,6 @@ setup(
         'Natural Language :: English',
         'Programming Language :: Python',
     ],
+    test_suite='runtests.runtests',
     zip_safe=False,
 )
