@@ -66,6 +66,12 @@ Usage
 Changes
 -------
 
+* 0.5:
+
+  * Tox tests for python 2.6 / 2,7 and Django 1.2 / 1.3 / trunk.
+  * Changed the registration API, backwards-incompatible if you were using it
+    but *much* simpler to use.
+
 * 0.4:
 
   * Test suite
