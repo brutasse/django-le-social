@@ -102,7 +102,7 @@ registration form asks for:
 The default form only checks that the email is correct and the two passwords
 match. If you want to perform extra validation, such as checking that the
 username and the email are unique, just subclass the form and add your
-validaton logic:
+validation logic:
 
 .. _FormView: https://docs.djangoproject.com/en/dev/ref/class-based-views/#django.views.generic.edit.FormView
 
