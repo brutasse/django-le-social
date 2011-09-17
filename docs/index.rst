@@ -51,6 +51,8 @@ If you have Django < 1.3:
 
     pip install django-le-social django-cbv
 
+Django-le-social is tested for python 2.6, 2.7 and Django 1.2, 1.3 and trunk.
+
 Usage
 -----
 
