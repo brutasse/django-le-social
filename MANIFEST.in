@@ -2,3 +2,6 @@ include README.rst LICENCE
 recursive-include le_social/tests *
 recursive-include le_social/registration/test_templates *
 recursive-include le_social/openid/test_templates *
+recursive-include docs *
+recursive-exclude docs/_build *
+global-exclude *.pyc
