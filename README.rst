@@ -16,7 +16,7 @@ him in.
 * Authors: see AUTHORS
 * Licence: BSD
 * Compatibility: Django 1.3 or Django < 1.3 + django-cbv
-* Requirements: twitter, python-openid
+* Requirements: twitter, python-openid, itsdangerous
 * Documentation: http://django-le-social.readthedocs.org/en/latest/
 
 Hacking
@@ -34,7 +34,8 @@ Hack, and run the tests::
 
     python setup.py test
 
-Or do it with `Tox`_ to test on python2.6 and 2.7::
+Or do it with `Tox`_ to test on python2.6 and 2.7, as well as all the
+supported Django versions::
 
     tox
 
