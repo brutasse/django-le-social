@@ -166,7 +166,8 @@ activation email by default. The following templates are used:
 
 * ``le_social/registration/activation_email.txt`` for the email body,
 
-* ``le_social/registration/activation_email_subject`` for the email subject.
+* ``le_social/registration/activation_email_subject.txt`` for the email
+  subject.
 
 The following context variables are available:
 
