@@ -1,6 +1,11 @@
 Traditional Registration
 ========================
 
+.. note:: Django versions
+
+    Django-le-social 0.6 requires Django 1.4 or greater. If you still run
+    Django <= 1.3, use django-le-social==0.5.
+
 This part explains how to use le-social to handle *traditional* registration,
 ala `django-registration`_.
 
