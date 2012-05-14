@@ -20,7 +20,6 @@ setup(
         'Django',
         'twitter>=1.6.1',
         'python-openid>=2.2.5',
-        'itsdangerous>=0.11',
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',

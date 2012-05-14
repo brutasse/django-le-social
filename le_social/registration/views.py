@@ -1,11 +1,10 @@
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sites.models import RequestSite
+from django.core import signing
 from django.core.mail import send_mail
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
-
-from itsdangerous import URLSafeTimedSerializer, BadSignature
 
 from ..utils import generic, reverse_lazy
 
@@ -22,11 +21,11 @@ class Activate(generic.TemplateView):
     expires_in = 60 * 60 * 24 * 30  # 30 days
 
     def dispatch(self, request, *args, **kwargs):
-        signer = URLSafeTimedSerializer(settings.SECRET_KEY)
         try:
-            self.activation_key = signer.loads(kwargs['activation_key'],
-                                               max_age=self.get_expires_in())
-        except BadSignature:
+            self.activation_key = signing.loads(kwargs['activation_key'],
+                                                max_age=self.get_expires_in(),
+                                                salt='le_social.registration')
+        except signing.BadSignature:
             return super(Activate, self).dispatch(request, *args, **kwargs)
         self.activate()
         return redirect(self.get_success_url())
@@ -64,8 +63,8 @@ class Register(generic.FormView):
 
     def form_valid(self, form):
         self.user = form.save()
-        signer = URLSafeTimedSerializer(settings.SECRET_KEY)
-        self.activation_key = signer.dumps(self.user.pk)
+        self.activation_key = signing.dumps(self.user.pk,
+                                            salt='le_social.registration')
         self.send_notification()
         return super(Register, self).form_valid(form)
 
