@@ -75,6 +75,8 @@ def setup_test_environment():
 
 
 def runtests(*test_args):
+    if not test_args:
+        test_args = ('twitter', 'openid', 'registration')
     setup_test_environment()
 
     parent = os.path.dirname(os.path.abspath(__file__))
