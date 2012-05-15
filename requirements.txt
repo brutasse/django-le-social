@@ -1,4 +1,4 @@
 Django
-twitter
+twitter<1.8
 python-openid
 coverage
