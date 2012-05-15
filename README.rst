@@ -1,6 +1,8 @@
 Django-le-social
 ================
 
+.. image:: https://secure.travis-ci.org/brutasse/django-le-social.png
+
 Django-le-social is an external registration helper for Django. It currently
 lets you use Twitter (OAuth) and OpenID authentication, as well as traditional
 registration.
