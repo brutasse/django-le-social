@@ -59,7 +59,7 @@ Add some URLs in ``registration/urls.py``:
         url(r'^activate/complete/$', views.activation_complete,
             name='registration_activation_complete'),
 
-        url(r'^activate/(?P<activation_key>\w+)/$', views.activate,
+        url(r'^activate/(?P<activation_key>[^/]+)/$', views.activate,
             name='registration_activate'),
 
         url(r'^register/$', views.register,
