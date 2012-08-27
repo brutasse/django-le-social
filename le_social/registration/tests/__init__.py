@@ -46,6 +46,19 @@ class RegistrationTest(TestCase):
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(User.objects.count(), 1)
 
+    def test_strip_subject_line(self):
+        url = reverse('registration_register')
+        response = self.client.post(url, {
+            'username': 'test',
+            'email': 'test@example.com',
+            'password1': 'foo',
+            'password2': 'foo',
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(len(mail.outbox), 1)
+        # This raises BadHeaderError if header is not properly stripped
+        mail.outbox[0].message()
+
     def test_register_with_no_notification(self):
         url = reverse('registration_register_with_notification')
         self.assertEqual(len(mail.outbox), 0)
