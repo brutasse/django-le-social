@@ -109,7 +109,7 @@ match. If you want to perform extra validation, such as checking that the
 username and the email are unique, just subclass the form and add your
 validation logic:
 
-.. _FormView: https://docs.djangoproject.com/en/dev/ref/class-based-views/#django.views.generic.edit.FormView
+.. _FormView: https://docs.djangoproject.com/en/dev/ref/class-based-views/generic-editing/#formview
 
 .. code-block:: python
 
