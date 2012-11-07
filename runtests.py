@@ -12,6 +12,16 @@ except ImportError:
 
 from le_social import openid, registration
 
+try:
+    import twitter
+except ImportError:
+    twitter = None
+
+try:
+    import openid as openid_
+except ImportError:
+    openid_ = None
+
 
 
 
@@ -30,10 +40,18 @@ def setup_test_environment():
         'django.contrib.sites',
         'django.contrib.messages',
 
-        'le_social.twitter',
-        'le_social.openid',
         'le_social.registration',
     ]
+
+    if twitter is not None:
+        apps += [
+            'le_social.twitter',
+        ]
+
+    if openid_ is not None:
+        apps += [
+            'le_social.openid',
+        ]
 
     middleware_classes = [
         'django.middleware.common.CommonMiddleware',
@@ -76,7 +94,15 @@ def setup_test_environment():
 
 def runtests(*test_args):
     if not test_args:
-        test_args = ('twitter', 'openid', 'registration')
+        test_args = ('registration',)
+        if twitter is not None:
+            test_args += (
+                'twitter',
+            )
+        if openid_ is not None:
+            test_args += (
+                'openid',
+            )
     setup_test_environment()
 
     parent = os.path.dirname(os.path.abspath(__file__))

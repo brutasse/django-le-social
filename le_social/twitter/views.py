@@ -6,8 +6,14 @@ from django.shortcuts import redirect
 
 from ..utils import generic
 
-from twitter import Twitter, OAuth, TwitterError
-from twitter.oauth_dance import parse_oauth_tokens
+try:
+    from twitter import Twitter, OAuth, TwitterError
+    from twitter.oauth_dance import parse_oauth_tokens
+except ImportError:
+    from django.core.exceptions import ImproperlyConfigured
+    raise ImproperlyConfigured(
+        "twitter<1.8 is required to use le_social.twitter."
+    )
 
 
 class OAuthMixin(object):

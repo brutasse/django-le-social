@@ -4,9 +4,15 @@ import time
 
 from hashlib import md5
 
-from openid.association import Association as OIDAssociation
-from openid.store import nonce
-from openid.store.interface import OpenIDStore
+try:
+    from openid.association import Association as OIDAssociation
+    from openid.store import nonce
+    from openid.store.interface import OpenIDStore
+except ImportError:
+    from django.core.exceptions import ImproperlyConfigured
+    raise ImproperlyConfigured(
+        "python-openid is required to use le_social.openid"
+    )
 
 from django.conf import settings
 from django.db.models import Q

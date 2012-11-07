@@ -1,8 +1,14 @@
 import time
 
-from openid.consumer.discover import discover
-from openid.extensions import sreg, ax
-from openid.yadis import xri
+try:
+    from openid.consumer.discover import discover
+    from openid.extensions import sreg, ax
+    from openid.yadis import xri
+except ImportError:
+    from django.core.exceptions import ImproperlyConfigured
+    raise ImproperlyConfigured(
+        "python-openid is required to use le_social.openid"
+    )
 
 from django.http import get_host
 from django.utils.html import escape

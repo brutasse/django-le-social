@@ -1,7 +1,13 @@
-from openid.consumer.consumer import (Consumer, SUCCESS, CANCEL, FAILURE,
-                                      SETUP_NEEDED)
-from openid.consumer.discover import DiscoveryFailure
-from openid.extensions import sreg, ax
+try:
+    from openid.consumer.consumer import (Consumer, SUCCESS, CANCEL, FAILURE,
+                                          SETUP_NEEDED)
+    from openid.consumer.discover import DiscoveryFailure
+    from openid.extensions import sreg, ax
+except ImportError:
+    from django.core.exceptions import ImproperlyConfigured
+    raise ImproperlyConfigured(
+        "python-openid is required to use le_social.openid"
+    )
 
 from django.shortcuts import redirect
 from django.utils.encoding import smart_unicode

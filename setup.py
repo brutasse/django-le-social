@@ -18,8 +18,6 @@ setup(
     long_description=open('README.rst').read(),
     install_requires=[
         'Django',
-        'twitter>=1.6.1',
-        'python-openid>=2.2.5',
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',
