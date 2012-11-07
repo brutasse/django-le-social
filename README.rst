@@ -20,7 +20,7 @@ him in.
 * Authors: see AUTHORS
 * Licence: BSD
 * Compatibility: Django 1.3 or Django < 1.3 + django-cbv
-* Requirements: twitter, python-openid, itsdangerous
+* Optional requirements: twitter, python-openid
 * Documentation: http://django-le-social.readthedocs.org/en/latest/
 
 Hacking

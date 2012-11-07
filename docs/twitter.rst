@@ -1,6 +1,13 @@
 Twitter authentication
 ======================
 
+Requirements
+------------
+
+Install the twitter library::
+
+    pip install twitter<1.8
+
 Basic usage
 -----------
 

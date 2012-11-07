@@ -1,6 +1,13 @@
 OpenID authentication
 =====================
 
+Requirements
+------------
+
+Install the ``python-openid`` package::
+
+    pip install python-openid
+
 For OpenID support, you need ``le_social.openid`` in your ``INSTALLED_APPS``.
 Make sure you run ``manage.py syncdb``.
 
