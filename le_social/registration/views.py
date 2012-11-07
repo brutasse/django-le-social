@@ -3,10 +3,10 @@ from django.contrib.auth.models import User
 from django.contrib.sites.models import RequestSite
 from django.core import signing
 from django.core.mail import send_mail
+from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
-
-from ..utils import generic, reverse_lazy
+from django.views import generic
 
 from .forms import RegistrationForm
 

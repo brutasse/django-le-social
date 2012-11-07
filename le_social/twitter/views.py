@@ -3,8 +3,7 @@ from __future__ import absolute_import
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.shortcuts import redirect
-
-from ..utils import generic
+from django.views import generic
 
 try:
     from twitter import Twitter, OAuth, TwitterError
