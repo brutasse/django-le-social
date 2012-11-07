@@ -66,6 +66,14 @@ Usage
 Changes
 -------
 
+* 0.6:
+
+  * Travis tests
+  * Django requirement bumped to 1.4
+  * ``itsdangerous`` requirement dropped
+  * ``twitter`` and ``python-openid`` requirements made optional: if you only
+    use ``le_social.registration`` you don't need to install them.
+
 * 0.5:
 
   * Tox tests for python 2.6 / 2,7 and Django 1.2 / 1.3 / trunk.
