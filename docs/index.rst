@@ -26,7 +26,7 @@ attributes and methods as much as possible.
 Code
 ----
 
-The source code is `available on Github`_ under the 3-clause BSD licence.
+The source code is `available on Github`_ under the 3-clause BSD license.
 
 .. _available on Github: https://github.com/brutasse/django-le-social
 
