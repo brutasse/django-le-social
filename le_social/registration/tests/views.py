@@ -5,6 +5,7 @@ registration_complete = views.RegistrationComplete.as_view()
 registration_closed = views.RegistrationClosed.as_view()
 register = views.Register.as_view()
 
+
 class NoNotificationRegistration(views.Register):
     def send_notification(self):
         return
@@ -15,9 +16,10 @@ activate = views.Activate.as_view()
 
 
 register_expired = views.Register.as_view(
-    notification_template_name = ('le_social/registration/'
-                                  'expired_activation_email.txt'),
+    notification_template_name=('le_social/registration/'
+                                'expired_activation_email.txt'),
 )
+
 
 class ExpiringActivate(views.Activate):
     expires_in = -1  # In the past

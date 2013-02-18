@@ -79,8 +79,8 @@ class Register(generic.FormView):
     def send_notification(self):
         context = self.get_notification_context()
         send_mail(
-            render_to_string(self.notification_subject_template_name, context
-            ).strip(),
+            render_to_string(self.notification_subject_template_name,
+                             context).strip(),
             render_to_string(self.notification_template_name, context),
             settings.DEFAULT_FROM_EMAIL,
             [self.user.email],

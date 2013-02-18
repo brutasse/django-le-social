@@ -54,8 +54,8 @@ def discover_extensions(openid_url):
 
 def from_openid_response(openid_response):
     issued = int(time.time())
-    sreg_resp = sreg.SRegResponse.fromSuccessResponse(openid_response) \
-            or []
+    sreg_resp = (sreg.SRegResponse.fromSuccessResponse(openid_response) or
+                 [])
     ax_resp = ax.FetchResponse.fromSuccessResponse(openid_response)
     ax_args = {}
     if ax_resp is not None:

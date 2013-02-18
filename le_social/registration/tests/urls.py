@@ -2,7 +2,8 @@ from django.conf.urls import patterns, url
 
 from . import views
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     url(r'^activate/complete/$', views.activation_complete,
         name='registration_activation_complete'),
 
