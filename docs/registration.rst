@@ -185,7 +185,7 @@ The following context variables are available:
 
   .. code-block:: jinja
 
-      http://{{ site.domain }}{% url registration_activate activation_key %}
+      http://{{ site.domain }}{% url "registration_activate" activation_key %}
 
 If you need more context variables, override ``get_notification_context()`` on
 the ``Register`` view. For instance, to add a ``scheme`` variable containing
