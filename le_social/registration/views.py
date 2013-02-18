@@ -6,6 +6,7 @@ from django.core.mail import send_mail
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
+from django.utils.encoding import force_text
 from django.views import generic
 
 from .forms import RegistrationForm
@@ -34,7 +35,7 @@ class Activate(generic.TemplateView):
         return self.expires_in
 
     def get_success_url(self):
-        return self.success_url
+        return force_text(self.success_url)
 
     def activate(self):
         User.objects.filter(pk=self.activation_key).update(is_active=True)
@@ -59,7 +60,7 @@ class Register(generic.FormView):
         return self.registration_closed
 
     def get_closed_url(self):
-        return self.closed_url
+        return force_text(self.closed_url)
 
     def form_valid(self, form):
         self.user = form.save()

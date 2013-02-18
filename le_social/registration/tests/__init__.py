@@ -36,8 +36,12 @@ class RegistrationTest(TestCase):
         self.assertFormError(response, 'form', 'username',
                              'The username must contain only letters, numbers '
                              'and underscores.')
-        self.assertFormError(response, 'form', 'email',
-                             'Enter a valid e-mail address.')
+        try:
+            self.assertFormError(response, 'form', 'email',
+                                 'Enter a valid email address.')
+        except AssertionError:
+            self.assertFormError(response, 'form', 'email',
+                                 'Enter a valid e-mail address.')
         self.assertFormError(response, 'form', None,
                              "The two passwords didn't match.")
         response = self.client.post(url, self.valid_data, follow=True)
