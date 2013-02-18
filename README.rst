@@ -17,11 +17,13 @@ to do, mainly store the OAuth token or the OpenID data, create a user and log
 him in.
 
 
-* Authors: see AUTHORS
+* Authors: Bruno Renié and `contributors`_
 * Licence: BSD
 * Compatibility: Django 1.4+
 * Optional requirements: twitter, python-openid
 * Documentation: http://django-le-social.readthedocs.org/en/latest/
+
+.. _contributors: https://github.com/brutasse/django-le-social/contributors
 
 Hacking
 -------
