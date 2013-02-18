@@ -40,7 +40,7 @@ Hack, and run the tests::
 
     python setup.py test
 
-Or do it with `Tox`_ to test on python2.6 and 2.7, as well as all the
+Or do it with `Tox`_ to test on python2.6, 2.7 and 3.3, as well as all the
 supported Django versions::
 
     tox
