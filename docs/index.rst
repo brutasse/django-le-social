@@ -61,6 +61,13 @@ Usage
 Changes
 -------
 
+* 0.8:
+
+  * The ``activate()`` method of ``le_social.registration.views.Activate`` now
+    has access to the request parameters in ``self.request``, ``self.args``
+    and ``self.kwargs``. This is useful if you need the request object for
+    automatically logging the user in for instance.
+
 * 0.7:
 
   * Fixes for Django 1.5 and Python 3.

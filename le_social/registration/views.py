@@ -28,6 +28,9 @@ class Activate(generic.TemplateView):
                                                 salt='le_social.registration')
         except signing.BadSignature:
             return super(Activate, self).dispatch(request, *args, **kwargs)
+        self.request = request
+        self.args = args
+        self.kwargs = kwargs
         self.activate()
         return redirect(self.get_success_url())
 
