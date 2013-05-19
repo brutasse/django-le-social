@@ -1,6 +1,7 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+
+from ..utils import get_user_model
 
 
 class RegistrationForm(forms.Form):
@@ -25,7 +26,7 @@ class RegistrationForm(forms.Form):
         return self.cleaned_data
 
     def save(self):
-        user = User.objects.create_user(
+        user = get_user_model().objects.create_user(
             self.cleaned_data['username'],
             self.cleaned_data['email'],
             self.cleaned_data['password1'],

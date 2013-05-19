@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.contrib.sites.models import RequestSite
 from django.core import signing
 from django.core.mail import send_mail
@@ -9,6 +8,7 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_text
 from django.views import generic
 
+from ..utils import get_user_model
 from .forms import RegistrationForm
 
 
@@ -41,7 +41,8 @@ class Activate(generic.TemplateView):
         return force_text(self.success_url)
 
     def activate(self):
-        User.objects.filter(pk=self.activation_key).update(is_active=True)
+        get_user_model().objects.filter(
+            pk=self.activation_key).update(is_active=True)
 
 
 class Register(generic.FormView):

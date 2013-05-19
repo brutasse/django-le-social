@@ -68,6 +68,12 @@ Changes
     and ``self.kwargs``. This is useful if you need the request object for
     automatically logging the user in for instance.
 
+  * Custom user model support in ``le_social.registration``. If your user
+    model is created differently than with a username, an email and a password
+    you need to override the registration form. Furthermore if your user
+    doesn't have an ``is_active`` flag you need to override the ``activate()``
+    method of the activation view.
+
 * 0.7:
 
   * Fixes for Django 1.5 and Python 3.
