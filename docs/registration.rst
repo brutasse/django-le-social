@@ -114,7 +114,7 @@ validation logic:
 .. code-block:: python
 
     from django import forms
-    from le_social.registration import RegistrationForm
+    from le_social.registration.forms import RegistrationForm
 
     class MyRegistrationForm(RegistrationForm):
         def clean_username(self):
