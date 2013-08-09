@@ -53,7 +53,7 @@ Add some URLs in ``registration/urls.py``:
 
     from django.conf.urls import patterns, url
 
-    from registration import views
+    from . import views
 
     urlpatterns = patterns('',
         url(r'^activate/complete/$', views.activation_complete,
