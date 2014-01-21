@@ -53,7 +53,7 @@ Add some URLs in ``registration/urls.py``:
 
     from django.conf.urls import patterns, url
 
-    from registration import views
+    from . import views
 
     urlpatterns = patterns('',
         url(r'^activate/complete/$', views.activation_complete,
@@ -114,7 +114,7 @@ validation logic:
 .. code-block:: python
 
     from django import forms
-    from le_social.registration import RegistrationForm
+    from le_social.registration.forms import RegistrationForm
 
     class MyRegistrationForm(RegistrationForm):
         def clean_username(self):
