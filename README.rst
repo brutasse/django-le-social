@@ -1,7 +1,7 @@
 Django-le-social
 ================
 
-.. image:: https://travis-ci.org/brutasse/django-le-social.png?branch=master
+.. image:: https://api.travis-ci.org/brutasse/django-le-social.svg?branch=master
    :alt: Build Status
    :target: https://travis-ci.org/brutasse/django-le-social
 
