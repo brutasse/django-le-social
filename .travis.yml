@@ -1,16 +1,23 @@
 language: python
-python:
-  - "2.6"
-  - "2.7"
-  - "3.3"
+python: "3.4"
 env:
-  - DJANGO_VERSION=1.4.5
-  - DJANGO_VERSION=1.5.1
+  - TOXENV=py26-1.4
+  - TOXENV=py26-1.5
+  - TOXENV=py26-1.6
+  - TOXENV=py26-master
+  - TOXENV=py27-1.4
+  - TOXENV=py27-1.5
+  - TOXENV=py27-1.6
+  - TOXENV=py27-master
+  - TOXENV=py33-1.5
+  - TOXENV=py33-1.6
+  - TOXENV=py33-master
+  - TOXENV=py34-1.5
+  - TOXENV=py34-1.6
+  - TOXENV=py34-master
+  - TOXENV=docs
+  - TOXENV=lint
 install:
-  - pip install Django==$DJANGO_VERSION
+  - pip install tox
 script:
-  - python setup.py test
-matrix:
-  exclude:
-    - python: "3.3"
-      env: DJANGO_VERSION=1.4.5
+  - tox -e $TOXENV

@@ -80,7 +80,7 @@ class Callback(generic.View, OAuthMixin):
         if verifier is None:
             return self.error('No verifier code')
 
-        if not 'request_token' in request.session:
+        if 'request_token' not in request.session:
             return self.error('No request token found in the session')
 
         request_token = request.session.pop('request_token')

@@ -2,6 +2,7 @@ import base64
 import operator
 import time
 
+from functools import reduce
 from hashlib import md5
 
 try:

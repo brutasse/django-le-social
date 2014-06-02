@@ -32,17 +32,14 @@ Setup your environment::
 
     git clone https://brutasse@github.com/brutasse/django-le-social.git
     cd django-le-social
-    mkvirtualenv --python python2 le-social
-    add2virtualenv .
-    pip install -r requirements.txt
+    mkvirtualenv --python le-social
+    pip install tox
 
 Hack, and run the tests::
 
-    python setup.py test
-
-Or do it with `Tox`_ to test on python2.6, 2.7 and 3.3, as well as all the
-supported Django versions::
-
     tox
 
-.. _Tox: http://codespeak.net/~hpk/tox
+`Tox`_ runs all tests on python2.6, 2.7 and 3.3 and above, as well as all the
+supported Django versions.
+
+.. _Tox: http://tox.readthedocs.org
