@@ -21,7 +21,7 @@ him in.
 * Licence: BSD
 * Compatibility: Django 1.4+
 * Optional requirements: twitter, python-openid
-* Documentation: http://django-le-social.readthedocs.org/en/latest/
+* Documentation: https://django-le-social.readthedocs.io/en/latest/
 
 .. _contributors: https://github.com/brutasse/django-le-social/contributors
 
@@ -42,4 +42,4 @@ Hack, and run the tests::
 `Tox`_ runs all tests on python2.6, 2.7 and 3.3 and above, as well as all the
 supported Django versions.
 
-.. _Tox: http://tox.readthedocs.org
+.. _Tox: https://tox.readthedocs.io
