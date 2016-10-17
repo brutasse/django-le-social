@@ -1,9 +1,8 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from . import views
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^activate/complete/$', views.activation_complete,
         name='registration_activation_complete'),
 
@@ -30,4 +29,4 @@ urlpatterns = patterns(
 
     url(r'^register/closed/$', views.registration_closed,
         name='registration_closed'),
-)
+]

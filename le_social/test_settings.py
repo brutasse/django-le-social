@@ -1,12 +1,7 @@
 import os
 import warnings
 
-import django
-
 warnings.simplefilter('always')
-
-if django.VERSION < (1, 6):
-    TEST_RUNNER = 'discover_runner.DiscoverRunner'
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -29,24 +24,31 @@ DATABASES = {
     },
 }
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
 )
+MIDDLEWARE_CLASSES = MIDDLEWARE  # Django < 1.10
 
-ROOT_URLCONF = ''
+ROOT_URLCONF = 'le_social.registration.tests.urls'
 
-TEMPLATE_DIRS = (
-    os.path.join(here, 'registration', 'test_templates'),
-    os.path.join(here, 'openid', 'test_templates'),
-)
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.contrib.messages.context_processors.messages',
-)
+TEMPLATES = [{
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'DIRS': [
+        os.path.join(here, 'registration', 'test_templates'),
+        os.path.join(here, 'openid', 'test_templates'),
+    ],
+    'APP_DIRS': True,
+    'OPTIONS': {
+        'context_processors': [
+            'django.contrib.auth.context_processors.auth',
+            'django.contrib.messages.context_processors.messages',
+        ],
+    },
+}]
 
 SITE_ID = 1

@@ -1,4 +1,4 @@
-{% load url from future %}Now you can activate. Here you'd have a link or something.
+Now you can activate. Here you'd have a link or something.
 
 For instance:
 

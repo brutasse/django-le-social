@@ -1,19 +1,15 @@
 language: python
-python: "3.4"
+python: "3.5"
 env:
-  - TOXENV=py26-1.4
-  - TOXENV=py26-1.5
-  - TOXENV=py26-1.6
-  - TOXENV=py27-1.4
-  - TOXENV=py27-1.5
-  - TOXENV=py27-1.6
-  - TOXENV=py27-master
-  - TOXENV=py33-1.5
-  - TOXENV=py33-1.6
-  - TOXENV=py33-master
-  - TOXENV=py34-1.5
-  - TOXENV=py34-1.6
-  - TOXENV=py34-master
+  - TOXENV=py27-django18
+  - TOXENV=py27-django19
+  - TOXENV=py27-django110
+  - TOXENV=py34-django18
+  - TOXENV=py34-django19
+  - TOXENV=py34-django110
+  - TOXENV=py35-django18
+  - TOXENV=py35-django19
+  - TOXENV=py35-django110
   - TOXENV=docs
   - TOXENV=lint
 install:

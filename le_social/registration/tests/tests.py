@@ -1,11 +1,13 @@
 from django.contrib.auth.models import User
 from django.core import mail
-from django.core.urlresolvers import reverse
+try:
+    from django.urls import reverse
+except ImportError:
+    from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 
 class RegistrationTest(TestCase):
-    urls = 'le_social.registration.tests.urls'
     valid_data = {
         'username': 'brutasse',
         'email': 'foo@example.com',

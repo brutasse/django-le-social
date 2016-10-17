@@ -33,20 +33,15 @@ The source code is `available on Github`_ under the 3-clause BSD license.
 Installation
 ------------
 
-If you have Django 1.4 and above::
+If you have Django 1.8 and above::
 
     pip install django-le-social
 
-If you have Django 1.3.*::
+If you have Django 1.4 - 1.7::
 
-    pip install django-le-social<0.6
+    pip install "django-le-social<0.9"
 
-If you have Django < 1.3::
-
-    pip install django-le-social<0.6 django-cbv
-
-Django-le-social is tested for python 2.6, 2.7 and 3.3. For Python 3 you need
-version >= 0.7.
+Django-le-social is tested for python 2.7, 3.4 and 3.5.
 
 Usage
 -----

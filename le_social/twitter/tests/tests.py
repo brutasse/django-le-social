@@ -10,7 +10,10 @@ try:
 except ImportError:
     twitter = None
 
-from django.core.urlresolvers import reverse
+try:
+    from django.urls import reverse
+except ImportError:
+    from django.core.urlresolvers import reverse
 from django.test import TestCase
 from mock import patch
 

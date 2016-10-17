@@ -19,7 +19,7 @@ him in.
 
 * Authors: Bruno Renié and `contributors`_
 * Licence: BSD
-* Compatibility: Django 1.4+
+* Compatibility: Django 1.8+
 * Optional requirements: twitter, python-openid
 * Documentation: https://django-le-social.readthedocs.io/en/latest/
 
@@ -39,7 +39,7 @@ Hack, and run the tests::
 
     tox
 
-`Tox`_ runs all tests on python2.6, 2.7 and 3.3 and above, as well as all the
+`Tox`_ runs all tests on python 2.7 and 3.4 and above, as well as all the
 supported Django versions.
 
 .. _Tox: https://tox.readthedocs.io
